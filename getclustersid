@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Retrieves the id of the cluster
+#
+# Please check the config file for the mandatory configuration parameters
+
+source common.sh
+
+result=$(curl --user "${PUBLICKEY}:${PRIVATEKEY}" --digest \
+     -s \
+     --request GET "https://cloud.mongodb.com/api/atlas/v1.0/groups/${GROUPID}/clusters/?pretty=true")
+
+echo ${result}|jq '.results[].id' -r

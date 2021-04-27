@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# This script creates a new restore job to be downloaded
+# Please check the config file for the mandatory configuration parameters
+
+source common.sh
+
+LASTSNAPSHOT=$(source getlastsnapshot)
+
+LASTSNAPSHOTID=$(echo ${LASTSNAPSHOT}|jq '.id' -r)
+
+info "Creating a restore request for the Snapshot ${LASTSNAPSHOTID}"
+
+result=$(curl --user "${PUBLICKEY}:${PRIVATEKEY}" --digest \
+     -s \
+	 --header "Accept: application/json" \
+     --header "Content-Type: application/json" \
+	 --request POST "https://cloud.mongodb.com/api/atlas/v1.0/groups/${GROUPID}/clusters/${CLUSTER}/backup/restoreJobs" \
+	 --data '{
+			 "snapshotId" : "'${LASTSNAPSHOTID}'",
+			 "deliveryType" : "download"
+		 }')
+
+echo ${result}|jq '.'

@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# This script checks the available restore jobs and uses the last one to retrieve the
+# URL of the last backup, if it's not available yet then it will wait and retry after WAITTIME
+# seconds, this will retry 10 times before giving up and showing an error
+#
+# Please check the config file for the mandatory configuration parameters
+
+source common.sh
+
+WAITTIME=10
+
+function get_available_restore_jobs() {
+	restore_jobs=$1
+	result=$(echo ${restore_jobs}|jq '.results[0].deliveryUrl|length')
+	echo ${result}
+}
+
+function get_restore_url() {
+	restorejobs=$(source getrestorejobs)
+	available=$(get_available_restore_jobs "${restorejobs}")
+	retrycounter=0
+	while [ "${available}" -eq "0" ];
+	do
+		info "Waiting ${WAITTIME} secs to check for available restore jobs"
+		sleep ${WAITTIME}
+		restorejobs=$(source getrestorejobs)
+		available=$(get_available_restore_jobs "${restorejobs}")
+		((retrycounter=retrycounter+1))
+		if [ "${retrycounter}" -gt 10 ];
+		then
+			info "Backup not available yet, please try again later"
+			exit 1
+		fi
+	done
+	URL=$(echo ${restorejobs}|jq '.results[0].deliveryUrl[0]' -r)
+	echo "${URL}"
+}
+
+URL=$(get_restore_url)
+if [ "$?" -ne 0 ]; 
+then
+	exit $?
+fi	
+curl -OL ${URL}
+

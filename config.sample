@@ -1,0 +1,9 @@
+#!/bin/bash
+
+export BASEURL=https://cloud.mongodb.com/api/atlas/v1.0
+export ORGID=777888fff123aa1a111ddd1
+export GROUPID=abcd12345abcd12345abcd21
+export CLUSTER=Cluster1
+export PUBLICKEY=pubckyek
+export PRIVATEKEY=12345678-1234-1234-abcd-1234567abcde
+

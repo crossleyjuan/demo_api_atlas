@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# This script retrieves the last snapshot available, it will return the json
+# with all the information about the snapshot to be used by other scripts
+#
+# Please check the config file for the mandatory configuration parameters
+
+source common.sh
+
+SNAPSHOTS=$(source getsnapshots)
+
+echo $SNAPSHOTS|jq '.results[0]'

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# This script retrieves all the available snaphost for the selected cluster, it's used by other scripts
+# therefore it will return the full json returned by Atlas
+#
+# Please check the config file for the mandatory configuration parameters
+source common.sh
+
+result=$(curl --user "${PUBLICKEY}:${PRIVATEKEY}" --digest \
+     -s \
+	 --request GET "https://cloud.mongodb.com/api/atlas/v1.0/groups/${GROUPID}/clusters/${CLUSTER}/backup/snapshots")
+
+echo ${result}
