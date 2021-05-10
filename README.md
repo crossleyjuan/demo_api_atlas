@@ -51,5 +51,9 @@ Downloading the last backup requires 2 steps, the first one creates the job and 
 
 This script will get the restore jobs and check if the job already has a "deliveryUrl" if it has then it will download the backup to the current folder
  
+# Delete cluster
 
+To delete a cluster you can perform:
+
+./delete-cluster.sh -n Cluster1
 
