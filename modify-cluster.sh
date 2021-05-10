@@ -4,22 +4,22 @@
 . common.sh
 
 function usage() {
-	echo "create-cluster.sh params"
+	echo "modify-cluster.sh params"
 	echo ""
 	echo "-n <name>       Cluster Name"
-	echo "-r <name>       Region Name (Default EUROPE_WEST_2)"
 	echo "-s <size name>  Size name for example M10"
-	echo "-b              If specified then the backup will be enabled."
+	echo "-r <name>       Region Name (Default EUROPE_WEST_2)"
+	echo "-b true|false   If specified then the backup will be enabled."
 	echo "-v <version>    Specifies the mongodb version: 4.0, 4.2 or 4.4 (default)"
 	echo ""
 	echo "Example:"
-	echo "./create-cluster -n Cluster1 -s M10"
+	echo "./modify_cluster-cluster -n Cluster1 -s M10"
 }
 
-BACKUPENABLED=false
-MONGODBVERSION=
+BACKUPENABLED=
 REGIONNAME=EUROPE_WEST_2
-while getopts ":n:s:r:v:b" o; do
+MONGODBVERSION=
+while getopts ":n:s:r:v:b:" o; do
     case "${o}" in
         n)
             CLUSTERNAME=${OPTARG}
@@ -31,7 +31,7 @@ while getopts ":n:s:r:v:b" o; do
             REGIONNAME=${OPTARG}
             ;;
         b)
-            BACKUPENABLED=true
+            BACKUPENABLED=${OPTARG}
             ;;
         v)
             MONGODBVERSION=${OPTARG}
@@ -43,26 +43,39 @@ while getopts ":n:s:r:v:b" o; do
 done
 shift $((OPTIND-1))
 
-if [ -z "${CLUSTERNAME}" ] || [ -z "${CLUSTERSIZE}" ]; then
+if [ -z "${CLUSTERNAME}" ]; then
     usage
 	exit 1
 fi
 
-function create_cluster() {
+if [ -z "${BACKUPENABLED}" ] && [ -z "${CLUSTERSIZE}" ] && [ -z "${MONGODBVERSION}" ]; then
+    usage
+	exit 1
+fi
+
+function modify_cluster() {
 	config=$(cat <<-EOF
 	 {
-         "name": "${CLUSTERNAME}",
-         "numShards": 1,
-         "providerSettings": {
-           "providerName": "GCP",
-           "instanceSizeName": "${CLUSTERSIZE}",
-           "regionName": "${REGIONNAME}"
-         },
-         "clusterType" : "REPLICASET",
-         "providerBackupEnabled": ${BACKUPENABLED}
 	 }		
 	EOF
 	)
+
+	if [ ! -z "${CLUSTERSIZE}" ];
+	then
+		settings=$(cat <<-EOF
+         {
+           "providerName": "GCP",
+           "instanceSizeName": "${CLUSTERSIZE}",
+           "regionName": "${REGIONNAME}"
+         }
+		EOF
+		)
+		config=$(echo "${config}" | jq '.providerSettings = '"${settings}"'')
+	fi
+	if [ ! -z "${BACKUPENABLED}" ];
+	then
+		config=$(echo "${config}" | jq '.providerBackupEnabled = '${BACKUPENABLED}'')
+	fi
 	if [ ! -z "${MONGODBVERSION}" ];
 	then
 		config=$(echo "${config}" | jq '.mongoDBMajorVersion = "'${MONGODBVERSION}'"')
@@ -72,13 +85,13 @@ function create_cluster() {
 	result=$(curl -s --user "${PUBLICKEYPROJ}:${PRIVATEKEYPROJ}" --digest \
 		--header 'Accept: application/json' \
 		--header 'Content-Type: application/json' \
-		--request POST "${URL}/groups/${PROJECTID}/clusters" \
+		--request PATCH "${URL}/groups/${PROJECTID}/clusters/${CLUSTERNAME}" \
 		--data ''"${config}"'')
 
 	echo "${result}"
 }
 
-result=$(create_cluster)
+result=$(modify_cluster)
 
 echo ${result}|jq .
 

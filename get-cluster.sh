@@ -17,5 +17,4 @@ result=$(curl -s --user "${PUBLICKEY}:${PRIVATEKEY}" --digest \
 	--header "Content-Type: application/json" \
 	--request GET "${URL}/api/public/v1.0/groups/${PROJECTID}/automationConfig")
 
-	#--request GET "${URL}/api/public/v1.0/groups/${PROJECTID}/clusters/${CLUSTERID}")
-echo ${result} >> config.json
+echo "${result}" | jq .

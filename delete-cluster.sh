@@ -29,7 +29,19 @@ if [ -z "${CLUSTERNAME}" ]; then
     usage
 	exit 1
 fi
+
+function delete_cluster() {
+	result=$(curl -s --user "${PUBLICKEYPROJ}:${PRIVATEKEYPROJ}" --digest \
+		--header 'Accept: application/json' \
+		--header 'Content-Type: application/json' \
+		--request DELETE "${URL}/groups/${PROJECTID}/clusters/${CLUSTERNAME}")
+
+	echo "${result}"
+}
+
 result=$(delete_cluster)
+
+echo ${result}|jq
 
 
 
