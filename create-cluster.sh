@@ -4,7 +4,7 @@
 . common.sh
 
 function usage() {
-	echo "create-cluster.sh params"
+	echo "create-cluster.sh -n <name> [-r name] [-s size] [-b] [-v version]"
 	echo ""
 	echo "-n <name>       Cluster Name"
 	echo "-r <name>       Region Name (Default EUROPE_WEST_2)"

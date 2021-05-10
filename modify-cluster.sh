@@ -4,7 +4,7 @@
 . common.sh
 
 function usage() {
-	echo "modify-cluster.sh params"
+	echo "modify-cluster.sh -n <name> [-r name] [-s size] [-b true|false] [-v version]"
 	echo ""
 	echo "-n <name>       Cluster Name"
 	echo "-s <size name>  Size name for example M10"
