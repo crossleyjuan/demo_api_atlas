@@ -1,6 +1,5 @@
 #!/bin/bash
 
-source config
 
 function info() {
 	message=$1

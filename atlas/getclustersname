@@ -3,7 +3,8 @@
 # This script retrieves the names of the available clusters in the project
 #
 # Please check the config file for the mandatory configuration parameters
-source common.sh
+source ../config
+source ../common.sh
 
 result=$(curl --user "${PUBLICKEY}:${PRIVATEKEY}" --digest \
      -s \

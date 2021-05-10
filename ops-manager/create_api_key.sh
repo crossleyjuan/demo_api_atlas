@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. config
+source ../config
 
 function createapikey() {
 	result=$(curl --user "${PUBLICKEY}:${PRIVATEKEY}" --digest \

@@ -5,7 +5,8 @@
 #
 # Please check the config file for the mandatory configuration parameters
 
-source common.sh
+source ../config
+source ../common.sh
 
 SNAPSHOTS=$(source getsnapshots)
 

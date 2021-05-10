@@ -4,7 +4,8 @@
 # therefore it will return the full json returned by Atlas
 #
 # Please check the config file for the mandatory configuration parameters
-source common.sh
+source ../config
+source ../common.sh
 
 #result=$(cat temp/ready.json)
 #result=$(cat temp/resultpending.json)

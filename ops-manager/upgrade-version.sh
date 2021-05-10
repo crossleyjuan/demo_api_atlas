@@ -1,7 +1,7 @@
 #!/bin/bash
 
-. config
-. common.sh
+source ../config
+source ../common.sh
 
 function usage() {
 	echo "update-version.sh <version>"

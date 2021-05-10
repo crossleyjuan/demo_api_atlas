@@ -1,6 +1,7 @@
 #!/bin/bash
 
-. config
+source ../config
+source ../common.sh
 
 export CLUSTERID=$1
 

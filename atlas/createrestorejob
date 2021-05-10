@@ -3,7 +3,8 @@
 # This script creates a new restore job to be downloaded
 # Please check the config file for the mandatory configuration parameters
 
-source common.sh
+source ../config
+source ../common.sh
 
 LASTSNAPSHOT=$(source getlastsnapshot)
 

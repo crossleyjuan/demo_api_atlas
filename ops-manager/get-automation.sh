@@ -1,6 +1,7 @@
 #!/bin/bash
 
-. common.sh
+source ../config
+source ../common.sh
 
 function get_automation() {
 	result=$(curl -s --user "${PUBLICKEY}:${PRIVATEKEY}" --digest \

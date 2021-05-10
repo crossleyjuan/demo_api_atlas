@@ -1,7 +1,7 @@
 #!/bin/bash
 
-. config
-. common.sh
+source ../config
+source ../common.sh
 
 function usage() {
 	echo "modify-cluster.sh -n <name> [-r name] [-s size] [-b true|false] [-v version]"

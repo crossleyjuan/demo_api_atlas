@@ -1,6 +1,7 @@
 #!/bin/bash
 
-. config
+source ../config
+source ../common.sh
 
 result=$(curl -s --user "${PUBLICKEYPROJ}:${PRIVATEKEYPROJ}" --digest \
 	--header "Accept: application/json" \
